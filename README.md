@@ -52,7 +52,7 @@ PolyGlot - это современная многофункциональная 
 Docker (рекомендуемый способ):
 bash
 # Клонирование репозитория
-git clone https://github.com/polyglot/translator.git
+git clone https://github.com/AndyPug17/PolyGlot-
 cd translator
 
 # Запуск через Docker Compose
