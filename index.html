@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PolyGlot Translator - Интеллектуальная система перевода</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-language"></i>
+                <span>PolyGlot</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Главная</a></li>
+                <li><a href="#features" class="nav-link">Возможности</a></li>
+                <li><a href="#modules" class="nav-link">Модули</a></li>
+                <li><a href="#architecture" class="nav-link">Архитектура</a></li>
+                <li><a href="#demo" class="nav-link">Демо</a></li>
+                <li><a href="#docs" class="nav-link">Документация</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="gradient-text">PolyGlot Translator</span>
+                </h1>
+                <p class="hero-subtitle">Интеллектуальная система автоматического перевода текстов с определением языка</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="showDemo()">
+                        <i class="fas fa-play"></i> Попробовать демо
+                    </button>
+                    <a href="#modules" class="btn btn-secondary">
+                        <i class="fas fa-info-circle"></i> Узнать больше
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">Языков</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">10</span>
+                        <span class="stat-label">Модулей</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">Точность</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="code-window">
+                    <div class="code-header">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                        <span class="code-title">translation.cs</span>
+                    </div>
+                    <div class="code-content">
+                        <pre><code><span class="keyword">var</span> <span class="function">result</span> = <span class="keyword">await</span> <span class="class">translator</span>.<span class="method">TranslateAsync</span>(
+    <span class="string">"Hello, world!"</span>, 
+    <span class="string">"ru"</span>, 
+    <span class="string">"auto"</span>
+);
+<span class="comment">// Результат: "Привет, мир!"</span>
+<span class="class">Console</span>.<span class="method">WriteLine</span>(result.<span class="property">TranslatedText</span>);</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ключевые возможности</h2>
+                <p>Современные технологии для качественного перевода</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                    <h3>Автоопределение языка</h3>
+                    <p>Интеллектуальный алгоритм определяет язык текста с точностью до 98%</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>100+ языков</h3>
+                    <p>Поддержка всех основных языков мира и редких диалектов</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-image"></i></div>
+                    <h3>OCR распознавание</h3>
+                    <p>Извлечение текста из изображений, скриншотов и PDF</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-headphones"></i></div>
+                    <h3>Озвучивание текста</h3>
+                    <p>Преобразование переведённого текста в речь</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-book"></i></div>
+                    <h3>Пользовательские словари</h3>
+                    <p>Создание персональных словарей терминов</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3>Аналитика использования</h3>
+                    <p>Детальная статистика переводов и производительности</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="modules" class="modules">
+        <div class="container">
+            <div class="section-header">
+                <h2>Архитектура системы</h2>
+                <p>10 модулей для полного функционала</p>
+            </div>
+            <div class="modules-tabs">
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="core">Ядро системы</button>
+                    <button class="tab-btn" data-tab="processing">Обработка</button>
+                    <button class="tab-btn" data-tab="ui">Интерфейс</button>
+                </div>
+                <div class="tabs-content">
+                    <div class="tab-pane active" id="core">
+                        <div class="modules-grid">
+                            <div class="module-item"><span class="module-num">01</span><h4>Аутентификация</h4><p>Регистрация, вход, JWT токены, 2FA</p></div>
+                            <div class="module-item"><span class="module-num">02</span><h4>Определение языка</h4><p>N-граммы, нейросети, confidence score</p></div>
+                            <div class="module-item"><span class="module-num">03</span><h4>Перевод текста</h4><p>Google, DeepL, Yandex, Microsoft API</p></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="processing">
+                        <div class="modules-grid">
+                            <div class="module-item"><span class="module-num">04</span><h4>Кэширование</h4><p>Redis, LRU, TTL управление</p></div>
+                            <div class="module-item"><span class="module-num">05</span><h4>Пользовательские словари</h4><p>Создание, импорт, экспорт словарей</p></div>
+                            <div class="module-item"><span class="module-num">06</span><h4>OCR распознавание</h4><p>Tesseract, предобработка изображений</p></div>
+                            <div class="module-item"><span class="module-num">09</span><h4>Синхронизация</h4><p>Кросс-платформенная синхронизация, бэкапы</p></div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="ui">
+                        <div class="modules-grid">
+                            <div class="module-item"><span class="module-num">07</span><h4>Text-to-Speech</h4><p>Azure TTS, Google TTS, Amazon Polly</p></div>
+                            <div class="module-item"><span class="module-num">08</span><h4>Аналитика</h4><p>Метрики, отчёты, дашборды</p></div>
+                            <div class="module-item"><span class="module-num">10</span><h4>Пользовательский интерфейс</h4><p>React, адаптивный дизайн, тёмная тема</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="architecture" class="architecture">
+        <div class="container">
+            <div class="section-header">
+                <h2>Архитектура приложения</h2>
+                <p>Многоуровневая структура с микросервисами</p>
+            </div>
+            <div class="arch-diagram">
+                <div class="arch-layer layer-1"><span>Пользовательский интерфейс</span><div class="layer-sub">React / Electron / React Native</div></div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-layer layer-2"><span>API Gateway</span><div class="layer-sub">REST API / WebSocket</div></div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-layer layer-3"><span>Сервисный слой</span><div class="layer-sub">Auth | Translation | OCR | TTS | Analytics</div></div>
+                <div class="arch-arrow">↓</div>
+                <div class="arch-layer layer-4"><span>Инфраструктура</span><div class="layer-sub">Redis Cache | PostgreSQL | Cloud Storage</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="demo">
+        <div class="container">
+            <div class="section-header">
+                <h2>Попробуйте прямо сейчас</h2>
+                <p>Интерактивное демо перевода</p>
+            </div>
+            <div class="demo-container">
+                <div class="demo-header">
+                    <select id="sourceLang" class="lang-select">
+                        <option value="auto">🔍 Автоопределение</option>
+                        <option value="en">🇬🇧 Английский</option>
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="fr">🇫🇷 Французский</option>
+                        <option value="de">🇩🇪 Немецкий</option>
+                        <option value="es">🇪🇸 Испанский</option>
+                    </select>
+                    <button class="swap-btn" onclick="swapLanguages()"><i class="fas fa-exchange-alt"></i></button>
+                    <select id="targetLang" class="lang-select">
+                        <option value="ru">🇷🇺 Русский</option>
+                        <option value="en">🇬🇧 Английский</option>
+                        <option value="fr">🇫🇷 Французский</option>
+                        <option value="de">🇩🇪 Немецкий</option>
+                        <option value="es">🇪🇸 Испанский</option>
+                    </select>
+                </div>
+                <div class="demo-content">
+                    <textarea id="sourceText" placeholder="Введите текст для перевода..." rows="5"></textarea>
+                    <div class="demo-result" id="translatedText">Перевод появится здесь...</div>
+                </div>
+                <div class="demo-footer">
+                    <button onclick="translateDemo()" class="btn-translate"><i class="fas fa-language"></i> Перевести</button>
+                    <button onclick="clearDemo()" class="btn-clear"><i class="fas fa-trash"></i> Очистить</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="docs" class="docs">
+        <div class="container">
+            <div class="section-header">
+                <h2>Документация</h2>
+                <p>Полная документация для разработчиков и пользователей</p>
+            </div>
+            <div class="docs-grid">
+                <div class="doc-card"><i class="fas fa-book-open"></i><h3>Пользовательское руководство</h3><p>Инструкции по использованию всех функций</p><a href="docs/lab1/" class="doc-link">Читать →</a></div>
+                <div class="doc-card"><i class="fas fa-code"></i><h3>API Reference</h3><p>Документация для разработчиков</p><a href="docs/lab2/" class="doc-link">Читать →</a></div>
+                <div class="doc-card"><i class="fas fa-download"></i><h3>Лабораторные работы</h3><p>Все выполненные лабораторные работы</p><a href="docs/" class="doc-link">Смотреть →</a></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo"><i class="fas fa-language"></i><span>PolyGlot Translator</span><p>Интеллектуальная система перевода</p></div>
+                <div class="footer-links">
+                    <div class="footer-column"><h4>Проект</h4><ul><li><a href="#home">Главная</a></li><li><a href="#features">Возможности</a></li><li><a href="#modules">Модули</a></li></ul></div>
+                    <div class="footer-column"><h4>Документация</h4><ul><li><a href="#">Руководство пользователя</a></li><li><a href="#">API Reference</a></li><li><a href="#">CHM справка</a></li></ul></div>
+                    <div class="footer-column"><h4>Лабораторные работы</h4><ul><li><a href="docs/lab1/">Лабораторная №1</a></li><li><a href="docs/lab2/">Лабораторная №2</a></li><li><a href="docs/lab3/">Лабораторная №3</a></li><li><a href="docs/lab4/">Лабораторная №4</a></li></ul></div>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2024 PolyGlot Translator. Все права защищены.</p></div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
