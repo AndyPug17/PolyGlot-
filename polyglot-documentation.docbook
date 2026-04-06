@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+
+<book id="polyglot-translator" lang="ru">
+    <bookinfo>
+        <title>PolyGlot Translator System</title>
+        <subtitle>Справочное руководство для программистов</subtitle>
+        <edition>Version 2.0.0</edition>
+        <date>2024-04-06</date>
+        <authorgroup>
+            <author>
+                <firstname>Andy</firstname>
+                <surname>Pug</surname>
+                <email>support@polyglot-translator.com</email>
+            </author>
+        </authorgroup>
+        <copyright>
+            <year>2024</year>
+            <holder>PolyGlot Team</holder>
+        </copyright>
+        <abstract>
+            <para>PolyGlot - интеллектуальная система автоматического перевода 
+            текстов с определением языка. Данное руководство содержит полное 
+            описание API, модулей и примеров использования.</para>
+        </abstract>
+    </bookinfo>
+
+    <!-- ======================== ГЛАВА 1 ======================== -->
+    <part id="core-services">
+        <title>Ядро системы</title>
+        <partintro>
+            <para>Часть описывает основные сервисы системы перевода.</para>
+        </partintro>
+
+        <!-- Глава 1: Модуль аутентификации -->
+        <chapter id="authentication-module">
+            <title>Модуль 1: Аутентификация и управление пользователями</title>
+            
+            <section id="auth-overview">
+                <title>Обзор</title>
+                <para>Модуль обеспечивает безопасный доступ к системе, 
+                регистрацию, авторизацию и управление сессиями пользователей.</para>
+                
+                <note>
+                    <para>Для работы модуля требуется наличие JWT секрета 
+                    в конфигурационном файле.</para>
+                </note>
+            </section>
+            
+            <section id="auth-classes">
+                <title>Классы и интерфейсы</title>
+                
+                <classsynopsis language="csharp">
+                    <ooclass>
+                        <classname>AuthenticationService</classname>
+                    </ooclass>
+                    <classsynopsisinfo>public class AuthenticationService : IAuthenticationService</classsynopsisinfo>
+                    
+                    <methodsynopsis>
+                        <modifier>public async Task&lt;AuthResult&gt;</modifier>
+                        <methodname>RegisterUserAsync</methodname>
+                        <methodparam>
+                            <type>UserRegistrationDto</type>
+                            <parameter>dto</parameter>
+                        </methodparam>
+                    </methodsynopsis>
+                    
+                    <methodsynopsis>
+                        <modifier>public async Task&lt;AuthResult&gt;</modifier>
+                        <methodname>LoginAsync</methodname>
+                        <methodparam>
+                            <type>LoginCredentials</type>
+                            <parameter>credentials</parameter>
+                        </methodparam>
+                    </methodsynopsis>
+                </classsynopsis>
+            </section>
+            
+            <section id="auth-examples">
+                <title>Примеры использования</title>
+                
+                <example id="auth-registration-example">
+                    <title>Регистрация нового пользователя</title>
+                    <programlisting language="csharp"><![CDATA[
+var service = new AuthenticationService();
+var result = await service.RegisterUserAsync(new UserRegistrationDto 
+{
+    Email = "user@example.com",
+    Password = "SecurePass123",
+    UserName = "JohnDoe"
+});
+
+if (result.Success) 
+{
+    Console.WriteLine($"Пользователь зарегистрирован: {result.UserId}");
+    Console.WriteLine($"Токен доступа: {result.Token}");
+}
+                    ]]></programlisting>
+                </example>
+                
+                <example id="auth-login-example">
+                    <title>Авторизация пользователя</title>
+                    <programlisting language="csharp"><![CDATA[
+var credentials = new LoginCredentials 
+{
+    Email = "user@example.com",
+    Password = "SecurePass123"
+};
+
+var result = await service.LoginAsync(credentials);
+if (result.Success)
+{
+    // Сохраняем токен для последующих запросов
+    _tokenStorage.SaveToken(result.Token);
+}
+                    ]]></programlisting>
+                </example>
+            </section>
+        </chapter>
+
+        <!-- Глава 2: Модуль определения языка -->
+        <chapter id="language-detection-module">
+            <title>Модуль 2: Определение языка текста</title>
+            
+            <section id="langdetect-overview">
+                <title>Обзор</title>
+                <para>Модуль автоматически определяет язык текста с использованием 
+                статистических алгоритмов и нейросетевых моделей.</para>
+                
+                <important>
+                    <para>Для достоверного определения рекомендуется передавать 
+                    текст длиной не менее 50 символов.</para>
+                </important>
+            </section>
+            
+            <section id="langdetect-classes">
+                <title>Классы и интерфейсы</title>
+                
+                <classsynopsis language="csharp">
+                    <ooclass>
+                        <classname>LanguageDetectionService</classname>
+                    </ooclass>
+                    <classsynopsisinfo>public class LanguageDetectionService : ILanguageDetectionService</classsynopsisinfo>
+                    
+                    <methodsynopsis>
+                        <modifier>public</modifier>
+                        <methodname>DetectLanguage</methodname>
+                        <methodparam>
+                            <type>string</type>
+                            <parameter>text</parameter>
+                        </methodparam>
+                        <methodparam choice="opt">
+                            <type>int</type>
+                            <parameter>minLength</parameter>
+                        </methodparam>
+                    </methodsynopsis>
+                </classsynopsis>
+            </section>
+            
+            <section id="langdetect-examples">
+                <title>Примеры использования</title>
+                
+                <example id="langdetect-example">
+                    <title>Определение языка текста</title>
+                    <programlisting language="csharp"><![CDATA[
+var detector = new LanguageDetectionService();
+var text = "Hello, world! This is an English text.";
+
+var result = detector.DetectLanguage(text);
+Console.WriteLine($"Определён язык: {result.Language}");
+Console.WriteLine($"Уверенность: {result.Confidence:P2}");
+
+if (result.AlternativeLanguages != null)
+{
+    Console.WriteLine("Альтернативные варианты:");
+    foreach (var alt in result.AlternativeLanguages)
+    {
+        Console.WriteLine($"  {alt.Key}: {alt.Value:P2}");
+    }
+}
+                    ]]></programlisting>
+                </example>
+            </section>
+        </chapter>
+
+        <!-- Глава 3: Модуль перевода -->
+        <chapter id="translation-module">
+            <title>Модуль 3: Перевод текста</title>
+            
+            <section id="translation-overview">
+                <title>Обзор</title>
+                <para>Модуль обеспечивает высококачественный перевод текста 
+                между поддерживаемыми языками с использованием нескольких 
+                провайдеров (Google, DeepL, Yandex, Microsoft).</para>
+            </section>
+            
+            <section id="translation-classes">
+                <title>Классы и интерфейсы</title>
+                
+                <classsynopsis language="csharp">
+                    <ooclass>
+                        <classname>TranslationService</classname>
+                    </ooclass>
+                    <classsynopsisinfo>public class TranslationService : ITranslationService</classsynopsisinfo>
+                    
+                    <methodsynopsis>
+                        <modifier>public async Task&lt;TranslationResult&gt;</modifier>
+                        <methodname>TranslateAsync</methodname>
+                        <methodparam>
+                            <type>string</type>
+                            <parameter>text</parameter>
+                        </methodparam>
+                        <methodparam>
+                            <type>string</type>
+                            <parameter>targetLanguage</parameter>
+                        </methodparam>
+                        <methodparam choice="opt">
+                            <type>string</type>
+                            <parameter>sourceLanguage</parameter>
+                        </methodparam>
+                    </methodsynopsis>
+                </classsynopsis>
+            </section>
+            
+            <section id="translation-examples">
+                <title>Примеры использования</title>
+                
+                <example id="translation-example">
+                    <title>Базовый перевод текста</title>
+                    <programlisting language="csharp"><![CDATA[
+var translator = new TranslationService();
+var result = await translator.TranslateAsync(
+    "Hello, how are you?", 
+    "ru", 
+    "auto"
+);
+
+if (result.Success)
+{
+    Console.WriteLine($"Перевод: {result.TranslatedText}");
+    Console.WriteLine($"Язык оригинала: {result.SourceLanguage}");
+    Console.WriteLine($"Время выполнения: {result.ProcessingTimeMs} мс");
+}
+                    ]]></programlisting>
+                </example>
+                
+                <example id="translation-batch-example">
+                    <title>Пакетный перевод</title>
+                    <programlisting language="csharp"><![CDATA[
+var texts = new List<string> 
+{
+    "Hello world",
+    "Good morning",
+    "Thank you"
+};
+
+var results = await translator.TranslateBatchAsync(texts, "es");
+
+foreach (var result in results)
+{
+    Console.WriteLine($"{result.OriginalText} -> {result.TranslatedText}");
+}
+                    ]]></programlisting>
+                </example>
+            </section>
+        </chapter>
+    </part>
+
+    <!-- ======================== ЧАСТЬ 2 ======================== -->
+    <part id="processing-optimization">
+        <title>Обработка и оптимизация</title>
+        
+        <!-- Глава 4: Кэширование -->
+        <chapter id="cache-module">
+            <title>Модуль 4: Кэширование и оптимизация</title>
+            
+            <section id="cache-overview">
+                <title>Обзор</title>
+                <para>Модуль реализует многоуровневое кэширование для 
+                повышения производительности системы.</para>
+                
+                <table id="cache-levels">
+                    <title>Уровни кэширования</title>
+                    <tgroup cols="3">
+                        <thead>
+                            <row>
+                                <entry>Уровень</entry>
+                                <entry>Тип</entry>
+                                <entry>Время жизни</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>L1</entry>
+                                <entry>In-Memory (LRU)</entry>
+                                <entry>1 час</entry>
+                            </row>
+                            <row>
+                                <entry>L2</entry>
+                                <entry>Redis</entry>
+                                <entry>24 часа</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </section>
+            
+            <section id="cache-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var cache = new CacheService(maxSize: 1000);
+
+// Сохранение в кэш
+await cache.SetAsync("key", data, TimeSpan.FromHours(1));
+
+// Получение из кэша
+var cached = await cache.GetAsync<MyData>("key");
+if (cached != null)
+{
+    // Используем кэшированные данные
+}
+else
+{
+    // Загружаем данные из источника
+}
+                ]]></programlisting>
+            </section>
+        </chapter>
+
+        <!-- Глава 5: Пользовательские словари -->
+        <chapter id="dictionary-module">
+            <title>Модуль 5: Пользовательские словари</title>
+            
+            <section id="dictionary-overview">
+                <title>Обзор</title>
+                <para>Позволяет пользователям создавать собственные словари 
+                терминов для улучшения качества перевода.</para>
+            </section>
+            
+            <section id="dictionary-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var dictService = new UserDictionaryService();
+
+// Создание словаря
+var dictionary = await dictService.CreateDictionaryAsync(
+    userId, 
+    "Technical Terms", 
+    "en", 
+    "ru"
+);
+
+// Добавление термина
+await dictService.AddTermAsync(
+    dictionary.Id, 
+    "API", 
+    "Интерфейс программирования приложений",
+    "technical documentation"
+);
+
+// Использование при переводе
+var translation = await dictService.GetCustomTranslationAsync(
+    userId, "API", "en", "ru"
+);
+                ]]></programlisting>
+            </section>
+        </chapter>
+
+        <!-- Глава 6: OCR распознавание -->
+        <chapter id="ocr-module">
+            <title>Модуль 6: Распознавание текста на изображениях</title>
+            
+            <section id="ocr-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var ocr = new OCRService();
+
+// Загрузка изображения
+byte[] imageData = File.ReadAllBytes("document.jpg");
+
+// Извлечение текста
+var result = await ocr.ExtractTextFromImageAsync(imageData, "rus");
+
+if (result.Success)
+{
+    Console.WriteLine($"Распознанный текст: {result.ExtractedText}");
+    Console.WriteLine($"Уверенность: {result.Confidence:P2}");
+    
+    // Перевод распознанного текста
+    var translated = await translator.TranslateAsync(
+        result.ExtractedText, 
+        "en"
+    );
+}
+                ]]></programlisting>
+            </section>
+        </chapter>
+    </part>
+
+    <!-- ======================== ЧАСТЬ 3 ======================== -->
+    <part id="ui-analytics">
+        <title>Пользовательский интерфейс и аналитика</title>
+        
+        <!-- Глава 7: Text-to-Speech -->
+        <chapter id="tts-module">
+            <title>Модуль 7: Озвучивание текста</title>
+            
+            <section id="tts-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var tts = new TextToSpeechService();
+
+// Получение доступных голосов
+var voices = await tts.GetAvailableVoicesAsync("ru-RU");
+foreach (var voice in voices)
+{
+    Console.WriteLine($"Голос: {voice.Name} ({voice.Gender})");
+}
+
+// Синтез речи
+var settings = new VoiceSettings 
+{
+    VoiceId = "ru-RU-Dariya",
+    Speed = 1.0f,
+    Pitch = 0f
+};
+
+var audioData = await tts.SynthesizeSpeechAsync(
+    "Привет, мир!", 
+    "ru-RU", 
+    settings
+);
+
+// Сохранение в файл
+await File.WriteAllBytesAsync("output.mp3", audioData);
+                ]]></programlisting>
+            </section>
+        </chapter>
+
+        <!-- Глава 8: Аналитика -->
+        <chapter id="analytics-module">
+            <title>Модуль 8: Аналитика и отчётность</title>
+            
+            <section id="analytics-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var analytics = new AnalyticsService();
+
+// Регистрация события
+await analytics.RecordTranslationEventAsync(new TranslationEventData
+{
+    UserId = currentUserId,
+    SourceLanguage = "en",
+    TargetLanguage = "ru",
+    TextLength = text.Length,
+    ProcessingTimeMs = 150,
+    Success = true
+});
+
+// Получение данных дашборда
+var dashboard = await analytics.GetDashboardDataAsync(
+    DateTime.Now.AddDays(-30), 
+    DateTime.Now
+);
+
+Console.WriteLine($"Всего переводов: {dashboard.TotalTranslations}");
+Console.WriteLine($"Уникальных пользователей: {dashboard.UniqueUsers}");
+Console.WriteLine($"Среднее время ответа: {dashboard.AverageResponseTime} мс");
+                ]]></programlisting>
+            </section>
+        </chapter>
+
+        <!-- Глава 9: Синхронизация -->
+        <chapter id="sync-module">
+            <title>Модуль 9: Синхронизация и резервное копирование</title>
+            
+            <section id="sync-examples">
+                <title>Примеры использования</title>
+                
+                <programlisting language="csharp"><![CDATA[
+var sync = new SyncService();
+
+// Синхронизация данных
+var syncResult = await sync.SyncUserDataAsync(userId, deviceId);
+Console.WriteLine($"Синхронизировано элементов: {syncResult.SyncedItems}");
+
+// Создание резервной копии
+var backup = await sync.CreateBackupAsync(userId, BackupType.Full);
+Console.WriteLine($"Резервная копия создана: {backup.BackupId}");
+Console.WriteLine($"Размер: {backup.Size / 1024} KB");
+                ]]></programlisting>
+            </section>
+        </chapter>
+
+        <!-- Глава 10: Пользовательский интерфейс -->
+        <chapter id="ui-module">
+            <title>Модуль 10: Пользовательский интерфейс</title>
+            
+            <section id="ui-api">
+                <title>API компонентов UI</title>
+                
+                <table id="ui-components">
+                    <title>Компоненты UI</title>
+                    <tgroup cols="2">
+                        <thead>
+                            <row>
+                                <entry>Компонент</entry>
+                                <entry>Описание</entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>TranslatorUIComponent</entry>
+                                <entry>Основной компонент перевода</entry>
+                            </row>
+                            <row>
+                                <entry>LanguageSelector</entry>
+                                <entry>Выбор языка перевода</entry>
+                            </row>
+                            <row>
+                                <entry>HistoryPanel</entry>
+                                <entry>Панель истории переводов</entry>
+                            </row>
+                            <row>
+                                <entry>DictionaryManager</entry>
+                                <entry>Управление словарями</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </section>
+        </chapter>
+    </part>
+
+    <!-- ======================== ПРИЛОЖЕНИЯ ======================== -->
+    <appendix id="appendix-error-codes">
+        <title>Коды ошибок</title>
+        
+        <table id="error-codes">
+            <title>Таблица кодов ошибок</title>
+            <tgroup cols="3">
+                <thead>
+                    <row>
+                        <entry>Код</entry>
+                        <entry>Название</entry>
+                        <entry>Описание</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>1001</entry>
+                        <entry>InvalidEmailFormat</entry>
+                        <entry>Неверный формат email адреса</entry>
+                    </row>
+                    <row>
+                        <entry>1002</entry>
+                        <entry>UserAlreadyExists</entry>
+                        <entry>Пользователь уже существует</entry>
+                    </row>
+                    <row>
+                        <entry>2001</entry>
+                        <entry>LanguageNotSupported</entry>
+                        <entry>Язык не поддерживается</entry>
+                    </row>
+                    <row>
+                        <entry>3001</entry>
+                        <entry>TranslationFailed</entry>
+                        <entry>Ошибка выполнения перевода</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </appendix>
+
+    <appendix id="appendix-glossary">
+        <title>Глоссарий</title>
+        
+        <glossary>
+            <glossentry>
+                <glossterm>JWT</glossterm>
+                <glossdef>
+                    <para>JSON Web Token - стандарт для создания токенов доступа.</para>
+                </glossdef>
+            </glossentry>
+            
+            <glossentry>
+                <glossterm>N-грамма</glossterm>
+                <glossdef>
+                    <para>Последовательность из N символов, используемая для анализа текста.</para>
+                </glossdef>
+            </glossentry>
+            
+            <glossentry>
+                <glossterm>OCR</glossterm>
+                <glossdef>
+                    <para>Optical Character Recognition - оптическое распознавание символов.</para>
+                </glossdef>
+            </glossentry>
+            
+            <glossentry>
+                <glossterm>TTS</glossterm>
+                <glossdef>
+                    <para>Text-to-Speech - технология синтеза речи.</para>
+                </glossdef>
+            </glossentry>
+        </glossary>
+    </appendix>
+</book>
